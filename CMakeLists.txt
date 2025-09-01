@@ -6,8 +6,8 @@ include_directories(include)
 
 set(SOURCES
 	src/main.cpp
-	# src/input.cpp
-	# src/window.cpp
+	src/input.cpp
+	src/window.cpp
 	# src/elements.cpp
 )
 
