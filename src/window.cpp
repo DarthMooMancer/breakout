@@ -3,12 +3,27 @@
 #include <chrono>
 #include <thread>
 
+Window::Window() {
+	m_lives = 3;
+}
 void Window::tick(int fps) {
 	std::this_thread::sleep_for(std::chrono::milliseconds(fps)); // 1000 / fps; 200ms = 5fps
 }
 
 void Window::clear() {
 	std::cout << "\033[H" << std::flush;
+}
+
+void Window::terminate(Ball &ball, bool &running) {
+	if(m_lives <= 0) {
+		clear();
+		std::cout << "You lose!" << std::endl;
+		running = false;
+	} if(ball.m_blocks_left <= 0) {
+		clear();
+		std::cout << "You win!" << std::endl;
+		running = false;
+	}
 }
 
 void Window::update_display(Paddle &paddle, Ball &ball, Block (&block_list)[15]) {
@@ -29,5 +44,6 @@ void Window::update_display(Paddle &paddle, Ball &ball, Block (&block_list)[15])
 		}
 		std::cout << "\r\n";
 	}
+	std::cout << "Lives left: " << m_lives << std::endl;
 	tick(150);
 }

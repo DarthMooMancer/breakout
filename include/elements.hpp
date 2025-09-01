@@ -6,7 +6,6 @@ struct Point {
 	int m_row;
 	int m_col;
 	void assign(int row, int col);
-	void to_string();
 };
 
 struct Ball {
@@ -14,8 +13,9 @@ struct Ball {
 	Point m_origin;
 	int vx;
 	int vy;
+	int m_blocks_left;
 	void get_new_pos();
-	void check_collision(int &lives);
+	void check_collision();
 	void change_velocity(char d);
 };
 
@@ -30,7 +30,7 @@ struct Paddle {
 struct Block {
 	Block(char symbol, int row, int col);
 	int _size;
-	bool _deleted;
+	int _deleted;
 	char m_symbol;
 	Point m_nodes[3];
 	void get_pos();

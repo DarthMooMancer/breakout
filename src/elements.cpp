@@ -1,6 +1,5 @@
 #include "elements.hpp"
 #include "globals.hpp"
-#include <iostream>
 
 Point::Point() {
 	m_row = 0;
@@ -10,10 +9,6 @@ Point::Point() {
 void Point::assign(int row, int col) {
 	m_row = row;
 	m_col = col;
-}
-
-void Point::to_string() {
-	std::cout << "(" << m_row << ", " << m_col << ")";
 }
 
 Paddle::Paddle() {
@@ -44,6 +39,7 @@ Ball::Ball() {
 	m_origin.assign(ROW - 5, (COL / 2));
 	vx = 1;
 	vy = -1;
+	m_blocks_left = 15;
 }
 
 void Ball::change_velocity(char d) {
@@ -56,7 +52,7 @@ void Ball::change_velocity(char d) {
 	}
 }
 
-void Ball::check_collision(int &lives) {
+void Ball::check_collision() {
 	if(m_origin.m_row <= 0) {
 		change_velocity('y');
 	} if(m_origin.m_col <= 0 || m_origin.m_col >= COL -1) {
@@ -95,6 +91,8 @@ void Block::get_pos() {
 void Block::_delete() {
 	for(int i = 0; i < _size; i++) {
 		m_nodes[i].assign(ROW - 1, COL - 1);
+		m_symbol = '.';
+		_deleted = true;
 	}
 }
 

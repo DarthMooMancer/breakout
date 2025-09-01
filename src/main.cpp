@@ -1,4 +1,3 @@
-#include <iostream>
 #include <thread>
 #include "input.hpp"
 #include "window.hpp"
@@ -16,23 +15,21 @@ int main() {
 	};
 
 	bool running = true;
-	int lives = 3;
-	int blocks_left = 15;
 	std::thread input_thread(&Input::get_input, &input, std::ref(running), std::ref(paddle));
 
 	while (running) {
 		window.update_display(paddle, ball, block_list);
 		paddle.get_new_pos();
-		ball.check_collision(lives);
+		ball.check_collision();
 		for(int i = 0; i < 15; i++) {
 			if(block_list[i]._deleted) {
 				continue;
 			}
 			block_list[i].get_pos();
-			block_list[i].check_collision(ball, blocks_left);
+			block_list[i].check_collision(ball, ball.m_blocks_left);
 		}
 		if(ball.m_origin.m_row >= ROW -1) {
-			lives--;
+			window.m_lives--;
 			ball.m_origin.assign(ROW - 7, (COL / 2));
 			ball.change_velocity('y');
 			window.update_display(paddle, ball, block_list);
@@ -41,16 +38,7 @@ int main() {
 
 		paddle.check_collision(ball);
 		ball.get_new_pos();
-		std::cout << "Lives left: " << lives << std::endl;
-		if(lives <= 0) {
-			window.clear();
-			std::cout << "You lose!" << std::endl;
-			running = false;
-		} if(blocks_left <= 0) {
-			window.clear();
-			std::cout << "You win!" << std::endl;
-			running = false;
-		}
+		window.terminate(ball, running);
 	}
 	input_thread.join();
 	return 0;
