@@ -2,6 +2,6 @@
 #define GLOBALS_HPP
 
 constexpr int ROW = 10;
-constexpr int COL = 10;
+constexpr int COL = 15;
 
 #endif

@@ -3,11 +3,12 @@
 #include <chrono>
 #include <thread>
 
-void Window::update_display() {
+void Window::update_display(Paddle &paddle, Ball &ball) {
 	for(std::array<char, COL> &row : m_board) { row.fill('.'); }
-	// Modify board
-	
-	// Refresh and draw screen
+	for(int i = 0; i < paddle._size; i++) {
+		m_board[paddle.m_nodes[i].m_row][paddle.m_nodes[i].m_col] = '-';
+	}
+	m_board[ball.m_origin.m_row][ball.m_origin.m_col] = '*';
 	std::cout << "\033[H" << std::flush;
 	for(std::array<char, COL> &row : m_board) {
 		for(char &col : row) {
@@ -15,5 +16,5 @@ void Window::update_display() {
 		}
 		std::cout << "\r\n";
 	}
-	std::this_thread::sleep_for(std::chrono::milliseconds(130)); // 1000 / fps; 200ms = 5fps
+	std::this_thread::sleep_for(std::chrono::milliseconds(300)); // 1000 / fps; 200ms = 5fps
 }
