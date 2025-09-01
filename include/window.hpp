@@ -9,5 +9,6 @@ struct Window {
 	std::array<std::array<char, COL>, ROW> m_board = {};
 	void update_display(Paddle &paddle, Ball &ball, Block (&block_list)[15]);
 	void tick(int fps);
+	void clear();
 };
 #endif

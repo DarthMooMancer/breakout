@@ -1,8 +1,6 @@
 #ifndef ELEMENTS_HPP
 #define ELEMENTS_HPP
 
-#include <string>
-
 struct Point {
 	Point();
 	int m_row;
@@ -32,10 +30,12 @@ struct Paddle {
 struct Block {
 	Block(char symbol, int row, int col);
 	int _size;
+	bool _deleted;
 	char m_symbol;
 	Point m_nodes[3];
 	void get_pos();
-	void check_collision(Ball &ball);
+	void check_collision(Ball &ball, int &blocks_left);
+	void _delete();
 };
 
 #endif
