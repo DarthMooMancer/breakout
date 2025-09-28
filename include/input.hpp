@@ -3,8 +3,8 @@
 #include "elements.hpp"
 
 struct Input {
-	char m_getch = ' ';
-	void get_input(bool &running, Paddle &paddle);
+	int m_getch;
+	void get_input(bool &running, enum Direction &dir);
 };
 
 #endif // INPUT_HPP

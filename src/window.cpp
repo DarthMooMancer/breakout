@@ -26,24 +26,30 @@ void Window::terminate(Ball &ball, bool &running) {
 	}
 }
 
-void Window::update_display(Paddle &paddle, Ball &ball, Block (&block_list)[15]) {
-	for(std::array<char, COL> &row : m_board) { row.fill('.'); }
-	for(int i = 0; i < paddle._size; i++) {
-		m_board[paddle.m_nodes[i].m_row][paddle.m_nodes[i].m_col] = '-';
-	}
-	for(int i = 0; i < 15; i++) {
-		for(int j = 0; j < block_list[i]._size; j++) {
-			m_board[block_list[i].m_nodes[j].m_row][block_list[i].m_nodes[j].m_col] = block_list[i].m_symbol;
+void Window::clear_display() {
+	for(int i = 0; i < ROW; i++) {
+		for(int j = 0; j < COL; j++) {
+			m_board[i][j] = nullptr;
 		}
 	}
-	m_board[ball.m_origin.m_row][ball.m_origin.m_col] = '*';
-	clear();
-	for(std::array<char, COL> &row : m_board) {
-		for(char &col : row) {
-			std::cout << col << " ";
+}
+
+void Window::update_display(Point** segments, int segments_size) {
+	for(int i = segments_size - 1; i >= 0; i--) {
+		if(segments[i] != nullptr) {
+			m_board[segments[i]->m_row][segments[i]->m_col] = segments[i];
+		}
+	}
+}
+
+void Window::draw_display(int fps) {
+	std::cout << "\033[H" << std::flush;
+	for(int i = 0; i < ROW; i++) {
+		for(int j = 0; j < COL; j++) {
+			if(m_board[i][j] != nullptr) std::cout << m_board[i][j]->m_symbol << " ";
+			else std::cout << ". ";
 		}
 		std::cout << "\r\n";
 	}
-	std::cout << "Lives left: " << m_lives << std::endl;
-	tick(150);
+	std::this_thread::sleep_for(std::chrono::milliseconds(fps));
 }
