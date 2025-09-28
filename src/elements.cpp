@@ -11,6 +11,11 @@ void Point::assign(int row, int col) {
 	m_col = col;
 }
 
+Paddle create_new_paddle(int size) {
+	Paddle paddle {};
+	return paddle;
+}
+
 Paddle::Paddle() {
 	_size = 3;
 	m_nodes[0].m_col = 6;
