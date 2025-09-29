@@ -1,17 +1,19 @@
 #include <thread>
+#include <iostream>
 #include "globals.hpp"
 #include "input.hpp"
 #include "window.hpp"
 #include "elements.hpp"
 
-int main() {
+int main(int argc, char **argv) {
 	Input input;
 	Window window;
-	Paddle paddle;
-	Ball ball;
-	
+	// Ball ball;
+
 	Point* segments[50] = {};
-	segments[1] = new Point { 2, 5, '*' };
+	// segments[1] = new Point { 2, 5, '*' };
+	Paddle paddle = create_new_paddle(segments, 0, 3, ROW - 2, '*');
+
 	// Block block_list[15] = {
 	// 	Block('3', 1, 0), Block('3', 1, 3), Block('3', 1, 6), Block('3', 1, 9), Block('3', 1, 12),
 	// 	Block('2', 2, 0), Block('2', 2, 3), Block('2', 2, 6), Block('2', 2, 9), Block('2', 2, 12),
@@ -23,7 +25,14 @@ int main() {
 
 	while (running) {
 		// window.update_display(paddle, ball, block_list);
-		paddle.get_new_pos();
+		// 	paddle.m_direction = RIGHT;
+		// 	for(int i = 0; i < 8; i++) {
+		// 		paddle.m_direction = RIGHT;
+		// 	}
+		// for(int i = 0; i < 10; i++) {
+		// 	if(segments[i] == nullptr) continue;
+		// 	segments[i]->to_string();
+		// }
 		// ball.check_collision();
 		// for(int i = 0; i < 15; i++) {
 		// 	if(block_list[i]._deleted) {
@@ -43,6 +52,7 @@ int main() {
 		// paddle.check_collision(ball);
 		// ball.get_new_pos();
 		// window.terminate(ball, running);
+		paddle.determine_new_position(window.m_board);
 		window.clear_display();
 		window.update_display(segments, 50);
 		window.draw_display(FPMS);

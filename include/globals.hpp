@@ -2,6 +2,6 @@
 #define GLOBALS_HPP
 #define ROW 15
 #define COL 15
-#define FPMS 300
+#define FPMS 100
 
 #endif

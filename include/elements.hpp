@@ -1,11 +1,13 @@
 #ifndef ELEMENTS_HPP
 #define ELEMENTS_HPP
 
+#include "globals.hpp"
+
 struct Point;
 struct Paddle;
 struct Block;
 struct Ball;
-Paddle create_new_paddle(int size);
+Paddle create_new_paddle(Point** segments, int index, int size, int row, char symbol);
 
 enum Direction {
 	LEFT = -1,
@@ -20,6 +22,7 @@ struct Point {
 	int m_col;
 	char m_symbol;
 	void assign(int row, int col);
+	void to_string();
 };
 
 struct Ball {
@@ -34,11 +37,12 @@ struct Ball {
 };
 
 struct Paddle {
-	Paddle();
+	Paddle(int size) : _size(size) {};
+	~Paddle();
 	int _size;
-	Point m_nodes[3];
+	Point** m_nodes;
 	enum Direction m_direction;
-	void get_new_pos();
+	void determine_new_position(Point* (*board)[COL]);
 	void check_collision(Ball &ball);
 };
 

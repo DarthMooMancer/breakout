@@ -1,3 +1,4 @@
+#include <iostream>
 #include "elements.hpp"
 #include "globals.hpp"
 
@@ -6,39 +7,57 @@ Point::Point() {
 	m_col = 0;
 }
 
+void Point::to_string() {
+	std::cout << "(" << m_row << ", " << m_col <<  ")\n";
+}
+
 void Point::assign(int row, int col) {
 	m_row = row;
 	m_col = col;
 }
 
-Paddle create_new_paddle(int size) {
-	Paddle paddle {};
+Paddle create_new_paddle(Point** segments, int index, int size, int row, char symbol) {
+	Paddle paddle { size };
+	paddle._size = size;
+	paddle.m_nodes = new Point*[size];
+	for(int i = 0; i < size; i++) {
+		paddle.m_nodes[i] = new Point { row, ((COL / 2) - (size / 2)) + i, symbol };
+		// paddle.m_nodes[i] = new Point { row, ((COL / 2) - (size / 2) - 1) + i, symbol };
+		segments[i + index] = paddle.m_nodes[i];
+	}
+
 	return paddle;
 }
 
-Paddle::Paddle() {
-	_size = 3;
-	m_nodes[0].m_col = 6;
-	for(int i = 0; i < _size; i++) {
-		m_nodes[i].m_row = ROW - 2;
-	}
+Paddle::~Paddle() {
+	delete[] m_nodes;
 }
 
-void Paddle::get_new_pos() {
-	for(int i = 1; i < _size; i++) {
-		m_nodes[i].m_col = m_nodes[0].m_col + i;	
-	}
-}
-
-void Paddle::check_collision(Ball &ball) {
-	for(int i = 0; i < _size; i++) {
-		if(ball.m_origin.m_row == m_nodes[i].m_row) {
-			if(ball.m_origin.m_col == m_nodes[i].m_col) {
-				ball.change_velocity('y');
-			}
+void Paddle::determine_new_position(Point* (*board)[COL]) {
+	if(m_direction == LEFT && m_nodes[0]->m_col - 1 >= 0) {
+		m_nodes[0]->m_col--;
+		for(int i = 1; i < _size; i++) {
+			m_nodes[i]->m_col = m_nodes[0]->m_col + i;
 		}
 	}
+	else if(m_direction == RIGHT && m_nodes[_size - 1]->m_col + 1 < ROW) {
+		m_nodes[_size - 1]->m_col++;
+		for(int i = 1; i < _size; i++) {
+			m_nodes[_size - (i + 1)]->m_col = m_nodes[_size - 1]->m_col - i;
+		}
+	}
+	m_direction = NONE;
 }
+
+// void Paddle::check_collision(Ball &ball) {
+// 	for(int i = 0; i < _size; i++) {
+// 		if(ball.m_origin.m_row == m_nodes[i].m_row) {
+// 			if(ball.m_origin.m_col == m_nodes[i].m_col) {
+// 				ball.change_velocity('y');
+// 			}
+// 		}
+// 	}
+// }
 
 Ball::Ball() {
 	m_origin.assign(ROW - 5, (COL / 2));
