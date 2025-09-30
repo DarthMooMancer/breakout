@@ -18,6 +18,11 @@ int main(int argc, char **argv) {
 	// 	Block('2', 2, 0), Block('2', 2, 3), Block('2', 2, 6), Block('2', 2, 9), Block('2', 2, 12),
 	// 	Block('1', 3, 0), Block('1', 3, 3), Block('1', 3, 6), Block('1', 3, 9), Block('1', 3, 12),
 	// };
+	Block block = create_new_block('3', 0, 0, 3);
+	for(int i = 0; i < block._size; i++) {
+		// if(buffer[i + 4] == nullptr) std::cout << "block point is a nullptr\n";
+		buffer[i + 4] = block.m_nodes[i];
+	}
 
 	bool running = true;
 	std::thread input_thread([&] { input.get_input(running, paddle.m_direction); } );

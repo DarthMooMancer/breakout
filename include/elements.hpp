@@ -8,7 +8,8 @@ struct Paddle;
 struct Block;
 struct Ball;
 Paddle create_new_paddle(Point** buffer, int starting_array_index, int size, int row, char symbol);
-Block create_new_block(Point** buffer, char symbol, int row, int col, int length);
+Block create_new_block(char symbol, int row, int col, int size);
+Block* create_block_buffer(Point** buffer, int starting_symbol, int rows, int col, int length);
 
 enum Direction {
 	LEFT = -1,
@@ -19,6 +20,7 @@ enum Direction {
 struct Point {
 	Point();
 	Point(int row, int col, char symbol) : m_row(row), m_col(col), m_symbol(symbol) {};
+	Point(int row, int col, int symbol) : m_row(row), m_col(col), m_symbol(symbol) {};
 	int m_row;
 	int m_col;
 	char m_symbol;
@@ -47,11 +49,12 @@ struct Paddle {
 };
 
 struct Block {
-	Block(char symbol, int row, int col);
+	// Block();
+	// Block(char symbol, int row, int col, int size);
+	// ~Block();
 	int _size;
 	int _deleted;
-	char m_symbol;
-	Point m_nodes[3];
+	Point** m_nodes;
 	void get_pos();
 	void check_collision(Ball &ball, int &blocks_left);
 	void _delete();
