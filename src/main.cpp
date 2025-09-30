@@ -10,9 +10,8 @@ int main(int argc, char **argv) {
 	Window window;
 	// Ball ball;
 
-	Point* segments[50] = {};
-	// segments[1] = new Point { 2, 5, '*' };
-	Paddle paddle = create_new_paddle(segments, 0, 3, ROW - 2, '*');
+	Point* buffer[50] = {};
+	Paddle paddle = create_new_paddle(buffer, 1, 3, ROW - 2, '-');
 
 	// Block block_list[15] = {
 	// 	Block('3', 1, 0), Block('3', 1, 3), Block('3', 1, 6), Block('3', 1, 9), Block('3', 1, 12),
@@ -30,8 +29,8 @@ int main(int argc, char **argv) {
 		// 		paddle.m_direction = RIGHT;
 		// 	}
 		// for(int i = 0; i < 10; i++) {
-		// 	if(segments[i] == nullptr) continue;
-		// 	segments[i]->to_string();
+		// 	if(buffer[i] == nullptr) continue;
+		// 	buffer[i]->to_string();
 		// }
 		// ball.check_collision();
 		// for(int i = 0; i < 15; i++) {
@@ -54,13 +53,13 @@ int main(int argc, char **argv) {
 		// window.terminate(ball, running);
 		paddle.determine_new_position(window.m_board);
 		window.clear_display();
-		window.update_display(segments, 50);
+		window.update_display(buffer, 50);
 		window.draw_display(FPMS);
 	}
 	input_thread.join();
 	for(int i = 0; i < 50; i++) {
-		if(segments[i] == nullptr) continue;
-		delete segments[i];
+		if(buffer[i] == nullptr) continue;
+		delete buffer[i];
 	}
 	return 0;
 }

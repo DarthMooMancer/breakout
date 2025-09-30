@@ -34,10 +34,10 @@ void Window::clear_display() {
 	}
 }
 
-void Window::update_display(Point** segments, int segments_size) {
-	for(int i = segments_size - 1; i >= 0; i--) {
-		if(segments[i] != nullptr) {
-			m_board[segments[i]->m_row][segments[i]->m_col] = segments[i];
+void Window::update_display(Point** buffer, int buffer_size) {
+	for(int i = buffer_size - 1; i >= 0; i--) {
+		if(buffer[i] != nullptr) {
+			m_board[buffer[i]->m_row][buffer[i]->m_col] = buffer[i];
 		}
 	}
 }

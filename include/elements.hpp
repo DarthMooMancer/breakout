@@ -7,7 +7,8 @@ struct Point;
 struct Paddle;
 struct Block;
 struct Ball;
-Paddle create_new_paddle(Point** segments, int index, int size, int row, char symbol);
+Paddle create_new_paddle(Point** buffer, int starting_array_index, int size, int row, char symbol);
+Block create_new_block(Point** buffer, char symbol, int row, int col, int length);
 
 enum Direction {
 	LEFT = -1,
@@ -22,7 +23,6 @@ struct Point {
 	int m_col;
 	char m_symbol;
 	void assign(int row, int col);
-	void to_string();
 };
 
 struct Ball {
