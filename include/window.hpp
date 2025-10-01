@@ -15,7 +15,7 @@ struct Window {
 
 	void clear_display();
 	void draw_display(int fps);
-	void update_display(Point** buffer, int buffer_size);
+	void update_board(Point** buffer, int buffer_size);
 };
 
 #endif

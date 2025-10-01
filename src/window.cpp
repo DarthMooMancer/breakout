@@ -34,7 +34,7 @@ void Window::clear_display() {
 	}
 }
 
-void Window::update_display(Point** buffer, int buffer_size) {
+void Window::update_board(Point** buffer, int buffer_size) {
 	for(int i = buffer_size - 1; i >= 0; i--) {
 		if(buffer[i] != nullptr) {
 			m_board[buffer[i]->m_row][buffer[i]->m_col] = buffer[i];
