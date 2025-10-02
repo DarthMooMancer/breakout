@@ -16,7 +16,6 @@ void Input::get_input(bool &running, enum Direction &dir) {
 			case 68:
 				dir = LEFT;
 				break;
-				break;
 			case 113:
 				running = false;
 				break;

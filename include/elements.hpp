@@ -12,7 +12,7 @@ Ball create_new_ball(Point** buffer, int index, int default_vx, int default_vy, 
 Block** create_block_buffer(int starting_array_index, int starting_symbol, int rows, int cols, int length);
 void rasterize_block(Point** buffer, Block* block, int starting_index);
 void rasterize_buffer(Point** buffer, Block** block_buffer, int offset);
-void trim_block_buffer_on_collision(Block** block_buffer, int &block_buffer_size, Ball &ball);
+void trim_block_buffer_on_collision(Point** buffer, int buffer_size, Block** block_buffer, int &block_buffer_size, Ball &ball);
 
 enum Direction {
 	LEFT = -1,
@@ -21,14 +21,13 @@ enum Direction {
 };
 
 struct Point {
-	Point();
+	Point() : m_row(0), m_col(0) {};
 	Point(int row, int col, char symbol) : m_row(row), m_col(col), m_symbol(symbol) {};
 	Point(int row, int col, int symbol) : m_row(row), m_col(col), m_symbol(symbol) {};
 	int m_row;
 	int m_col;
 	char m_symbol;
 	void assign(int row, int col);
-	void to_string();
 };
 
 struct Ball {
@@ -36,7 +35,6 @@ struct Ball {
 	Point* m_origin;
 	int vx;
 	int vy;
-	int m_blocks_left;
 	void determine_new_position();
 	void change_velocity(char d);
 };
@@ -56,11 +54,8 @@ struct Block {
 	Block(int size, int row, int col, char symbol);
 	~Block();
 	int _size;
-	int _deleted;
 	Point** m_nodes;
-	void get_pos();
 	bool check_collision(Ball &ball);
-	void _delete();
 };
 
 #endif

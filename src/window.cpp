@@ -3,29 +3,6 @@
 #include <chrono>
 #include <thread>
 
-Window::Window() {
-	m_lives = 3;
-}
-void Window::tick(int fps) {
-	std::this_thread::sleep_for(std::chrono::milliseconds(fps)); // 1000 / fps; 200ms = 5fps
-}
-
-void Window::clear() {
-	std::cout << "\033[H" << std::flush;
-}
-
-void Window::terminate(Ball &ball, bool &running) {
-	if(m_lives <= 0) {
-		clear();
-		std::cout << "You lose!" << std::endl;
-		running = false;
-	} if(ball.m_blocks_left <= 0) {
-		clear();
-		std::cout << "You win!" << std::endl;
-		running = false;
-	}
-}
-
 void Window::clear_display() {
 	for(int i = 0; i < ROW; i++) {
 		for(int j = 0; j < COL; j++) {

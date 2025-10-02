@@ -1,16 +1,5 @@
 #include "elements.hpp"
 #include "globals.hpp"
-#include <iostream>
-
-
-Point::Point() {
-	m_row = 0;
-	m_col = 0;
-}
-
-void Point::to_string() {
-	std::cout << "(" << m_row << ", " << m_col <<  ")\n";
-}
 
 Paddle create_new_paddle(Point** buffer, int starting_array_index, int size, int row, char symbol) {
 	Paddle paddle { size };
@@ -59,20 +48,36 @@ void rasterize_buffer(Point** buffer, Block** block_buffer, int offset) {
 	}
 }
 
-void trim_block_buffer_on_collision(Block** block_buffer, int &block_buffer_size, Ball &ball) {
+void trim_block_buffer_on_collision(Point** buffer, int buffer_size, Block** block_buffer, int &block_buffer_size, Ball &ball) {
 	for(int i = 0; i < block_buffer_size; i++) {
 		if(block_buffer[i] == nullptr) continue;
 		if(block_buffer[i]->check_collision(ball)) {
 			ball.change_velocity('y');
+			for(int a = 0; a < block_buffer[i]->_size; a++) {
+				Point* doomed = block_buffer[i]->m_nodes[a];
+				// delete doomed;
+				// block_buffer[i]->m_nodes[a] = nullptr;
+				for(int j = 0; j < buffer_size; j++) {
+					if(buffer[j] == doomed) {
+						buffer[j] = nullptr;
+					}
+				}
+			}
 			delete block_buffer[i];
 			block_buffer[i] = nullptr;
-			// block_buffer_size--;
 		}
 	}
 }
 
 Paddle::~Paddle() {
-	delete[] m_nodes;
+	if(m_nodes) {
+		for(int i = 0; i < _size; i++) {
+			delete m_nodes[i];
+			m_nodes[i] = nullptr;
+		}
+		delete[] m_nodes;
+		m_nodes = nullptr;
+	}
 }
 
 void Paddle::determine_new_position(Point* (*board)[COL]) {
@@ -110,18 +115,30 @@ void Ball::change_velocity(char d) {
 }
 
 void Ball::determine_new_position() {
-	if(m_origin->m_row <= 0 || m_origin->m_row >= ROW - 1) change_velocity('y');
-	if(m_origin->m_col <= 0 || m_origin->m_col >= COL - 1) change_velocity('x');
+	if(m_origin->m_row <= 0) {
+		vy = 1;
+	} else if(m_origin->m_row >= ROW - 1) {
+		vy = -1;
+	}
+	if(m_origin->m_col <= 0) {
+		vx = 1;
+	} else if(m_origin->m_col >= COL - 1) {
+		vx = -1;
+	}
 
-	if(vx == -1) m_origin->m_col--;
-	else if(vx == 1) m_origin->m_col++;
-
-	if(vy == -1) m_origin->m_row--;
-	else if(vy == 1) m_origin->m_row++;
+	m_origin->m_col += vx;
+	m_origin->m_row += vy;
 }
 
 Block::~Block() {
-	delete[] m_nodes;
+	if(m_nodes) {
+		for(int i = 0; i < _size; i++) {
+			delete m_nodes[i];
+			m_nodes[i] = nullptr;
+		}
+		delete[] m_nodes;
+		m_nodes = nullptr;
+	}
 }
 
 Block::Block(int size, int row, int col, char symbol) {
@@ -140,5 +157,3 @@ bool Block::check_collision(Ball &ball) {
 	}
 	return false;
 }
-
-// ball.change_velocity('y');
