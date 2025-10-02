@@ -12,7 +12,7 @@ Ball create_new_ball(Point** buffer, int index, int default_vx, int default_vy, 
 Block** create_block_buffer(int starting_array_index, int starting_symbol, int rows, int cols, int length);
 void rasterize_block(Point** buffer, Block* block, int starting_index);
 void rasterize_buffer(Point** buffer, Block** block_buffer, int offset);
-void trim_block_buffer_on_collision(Block** block_buffer, int block_buffer_size, Ball &ball);
+void trim_block_buffer_on_collision(Block** block_buffer, int &block_buffer_size, Ball &ball);
 
 enum Direction {
 	LEFT = -1,

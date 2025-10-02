@@ -11,23 +11,34 @@ int main(int argc, char **argv) {
 
 	Point* buffer[50] = {};
 	Paddle paddle = create_new_paddle(buffer, 1, 3, ROW - 2, '-');
-	Ball ball = create_new_ball(buffer, 0, 1, -1, (ROW - 5), (COL / 2), '*' );
+	// Ball ball = create_new_ball(buffer, 0, 1, -1, (ROW - 5), (COL / 2), '*' );
+	Ball ball = create_new_ball(buffer, 0, 1, -1, 0, 0, '*' );
+	int buffer_block_size = 15;
 	Block** block_buffer = create_block_buffer(4, '3', 3, 5, 3);
 	rasterize_buffer(buffer, block_buffer, 4);
 
 	bool running = true;
-	std::thread input_thread([&] { input.get_input(running, paddle.m_direction); } );
-
-	while (running) {
-		paddle.determine_new_position(window.m_board);
-		paddle.check_collision(ball);
-		trim_block_buffer_on_collision(block_buffer, 15, ball);
-		ball.determine_new_position();
-		window.clear_display();
-		window.update_board(buffer, 50);
-		window.draw_display(FPMS);
+	for(int i = 0; i < buffer_block_size; i++) {
+		std::cout << block_buffer[i] << "\n";
 	}
-	input_thread.join();
+	trim_block_buffer_on_collision(block_buffer, buffer_block_size, ball);
+	rasterize_buffer(buffer, block_buffer, 4);
+	std::cout << "\n";
+	for(int i = 0; i < buffer_block_size; i++) {
+		std::cout << block_buffer[i] << "\n";
+	}
+	// std::thread input_thread([&] { input.get_input(running, paddle.m_direction); } );
+	//
+	// while (running) {
+	// 	paddle.determine_new_position(window.m_board);
+	// 	paddle.check_collision(ball);
+	// 	trim_block_buffer_on_collision(block_buffer, buffer_block_size, ball);
+	// 	ball.determine_new_position();
+	// 	window.clear_display();
+	// 	window.update_board(buffer, 50);
+	// 	window.draw_display(FPMS);
+	// }
+	// input_thread.join();
 	for(int i = 0; i < 50; i++) {
 		if(buffer[i] == nullptr) continue;
 		delete buffer[i];

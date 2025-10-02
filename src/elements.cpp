@@ -53,20 +53,20 @@ void rasterize_block(Point** buffer, Block* block, int starting_index) {
 
 void rasterize_buffer(Point** buffer, Block** block_buffer, int offset) {
 	for(int i = 0; i < 15; i++) {
+		if(block_buffer[i] == nullptr) continue;
 		rasterize_block(buffer, block_buffer[i], offset);
 		offset += 3;
 	}
 }
 
-void trim_block_buffer_on_collision(Block** block_buffer, int block_buffer_size, Ball &ball) {
+void trim_block_buffer_on_collision(Block** block_buffer, int &block_buffer_size, Ball &ball) {
 	for(int i = 0; i < block_buffer_size; i++) {
 		if(block_buffer[i] == nullptr) continue;
 		if(block_buffer[i]->check_collision(ball)) {
-			for(int a = 0; a < block_buffer[i]->_size; a++) {
-				delete block_buffer[i]->m_nodes[a];
-			}
 			ball.change_velocity('y');
 			delete block_buffer[i];
+			block_buffer[i] = nullptr;
+			// block_buffer_size--;
 		}
 	}
 }
