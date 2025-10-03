@@ -37,7 +37,9 @@ int main() {
 		}
 		std::cout << "Hearts left: " << paddle.m_hearts << "\n";
 	}
+
 	input_thread.join();
 	cleanup(block_buffer, block_buffer_size);
+
 	return 0;
 }

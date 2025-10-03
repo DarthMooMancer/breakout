@@ -3,7 +3,6 @@
 
 Paddle create_new_paddle(Point** buffer, int starting_array_index, int size, int row, char symbol) {
 	Paddle paddle { size };
-	paddle._size = size;
 	paddle.m_nodes = new Point*[size];
 	for(int i = 0; i < size; i++) {
 		paddle.m_nodes[i] = new Point { row, ((COL / 2) - (size / 2)) + i, symbol };
@@ -13,10 +12,10 @@ Paddle create_new_paddle(Point** buffer, int starting_array_index, int size, int
 	return paddle;
 }
 
-Ball create_new_ball(Point** buffer, int index, int default_vx, int default_vy, int row, int col, char symbol) {
+Ball create_new_ball(Point** buffer, int buffer_index, int default_vx, int default_vy, int row, int col, char symbol) {
 	Ball ball { default_vx, default_vy };
 	ball.m_origin = new Point { row, col, symbol };
-	buffer[index] = ball.m_origin;
+	buffer[buffer_index] = ball.m_origin;
 	return ball;
 }
 
@@ -36,14 +35,12 @@ Block** create_block_buffer(int starting_array_index, int starting_symbol, int r
 
 bool is_block_buffer_empty(Block** block_buffer, int block_buffer_size) {
 	int total_clear_blocks = 0;
-	for(int i = 0; i < block_buffer_size; i++) {
-		if(block_buffer[i] == nullptr) {
-			total_clear_blocks++;
-		}
+	for(int block_index = 0; block_index < block_buffer_size; block_index++) {
+		if(block_buffer[block_index] != nullptr) continue;
+		total_clear_blocks++;
 	}
-	if(total_clear_blocks == block_buffer_size) {
-		return true;
-	}
+
+	if(total_clear_blocks == block_buffer_size) return true;
 	return false;
 }
 
@@ -54,16 +51,12 @@ void cleanup(Block** block_buffer, int block_buffer_size) {
 	delete[] block_buffer;
 }
 
-void rasterize_block(Point** buffer, Block* block, int starting_index) {
-	for(int i = 0; i < block->_size; i++) {
-		buffer[starting_index + i] = block->m_nodes[i];
-	}
-}
-
 void rasterize_buffer(Point** buffer, Block** block_buffer, int offset) {
-	for(int i = 0; i < 15; i++) {
-		if(block_buffer[i] == nullptr) continue;
-		rasterize_block(buffer, block_buffer[i], offset);
+	for(int block_index = 0; block_index < 15; block_index++) {
+		if(block_buffer[block_index] == nullptr) continue;
+		for(int node_index = 0; node_index < block_buffer[block_index]->_size; node_index++) {
+			buffer[offset + node_index] = block_buffer[block_index]->m_nodes[node_index];
+		}
 		offset += 3;
 	}
 }
@@ -75,8 +68,6 @@ void trim_block_buffer_on_collision(Point** buffer, int buffer_size, Block** blo
 			ball.change_velocity('y');
 			for(int a = 0; a < block_buffer[i]->_size; a++) {
 				Point* doomed = block_buffer[i]->m_nodes[a];
-				// delete doomed;
-				// block_buffer[i]->m_nodes[a] = nullptr;
 				for(int j = 0; j < buffer_size; j++) {
 					if(buffer[j] == doomed) {
 						buffer[j] = nullptr;
