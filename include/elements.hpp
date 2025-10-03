@@ -13,6 +13,8 @@ Block** create_block_buffer(int starting_array_index, int starting_symbol, int r
 void rasterize_block(Point** buffer, Block* block, int starting_index);
 void rasterize_buffer(Point** buffer, Block** block_buffer, int offset);
 void trim_block_buffer_on_collision(Point** buffer, int buffer_size, Block** block_buffer, int &block_buffer_size, Ball &ball);
+void cleanup(Block** block_buffer, int block_buffer_size);
+bool is_block_buffer_empty(Block** block_buffer, int block_buffer_size);
 
 enum Direction {
 	LEFT = -1,

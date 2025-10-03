@@ -34,6 +34,26 @@ Block** create_block_buffer(int starting_array_index, int starting_symbol, int r
 	return block_buffer;
 }
 
+bool is_block_buffer_empty(Block** block_buffer, int block_buffer_size) {
+	int total_clear_blocks = 0;
+	for(int i = 0; i < block_buffer_size; i++) {
+		if(block_buffer[i] == nullptr) {
+			total_clear_blocks++;
+		}
+	}
+	if(total_clear_blocks == block_buffer_size) {
+		return true;
+	}
+	return false;
+}
+
+void cleanup(Block** block_buffer, int block_buffer_size) {
+	for(int i = 0; i < block_buffer_size; i++) {
+		delete block_buffer[i];
+	}
+	delete[] block_buffer;
+}
+
 void rasterize_block(Point** buffer, Block* block, int starting_index) {
 	for(int i = 0; i < block->_size; i++) {
 		buffer[starting_index + i] = block->m_nodes[i];

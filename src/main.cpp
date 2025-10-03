@@ -27,15 +27,17 @@ int main() {
 		window.clear_display();
 		window.update_board(buffer, buffer_size);
 		window.draw_display(FPMS);
-		// Create a clause that closes game on lives = 0
+		if(paddle.m_hearts <= 0) {
+			running = false;
+			std::cout << "No Hearts left! You lose!\n";
+		}
+		if(is_block_buffer_empty(block_buffer, block_buffer_size)) {
+			running = false;
+			std::cout << "No Blocks left! You win!\n";
+		}
 		std::cout << "Hearts left: " << paddle.m_hearts << "\n";
 	}
 	input_thread.join();
-	// TODO
-	// move below to a cleanup function instead
-	for(int i = 0; i < block_buffer_size; i++) {
-		delete block_buffer[i];
-	}
-	delete[] block_buffer;
+	cleanup(block_buffer, block_buffer_size);
 	return 0;
 }
