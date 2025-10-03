@@ -33,8 +33,5 @@ int main() {
 		delete block_buffer[i];
 	}
 	delete[] block_buffer;
-	for(int i = 0; i < 50; i++) {
-		delete buffer[i];
-	}
 	return 0;
 }
