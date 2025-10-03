@@ -36,14 +36,15 @@ struct Ball {
 	Point* m_origin;
 	int vx;
 	int vy;
-	void determine_new_position();
+	void determine_new_position(int &paddle_lives, int reset_ball_x, int reset_ball_y);
 	void change_velocity(char d);
 };
 
 struct Paddle {
-	Paddle(int size) : _size(size) {};
+	Paddle(int size) : _size(size), m_hearts(3) {};
 	~Paddle();
 	int _size;
+	int m_hearts;
 	Point** m_nodes;
 	enum Direction m_direction;
 	void determine_new_position(Point* (*board)[COL]);

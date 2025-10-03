@@ -119,11 +119,13 @@ void Ball::change_velocity(char d) {
 	}
 }
 
-void Ball::determine_new_position() {
+void Ball::determine_new_position(int &paddle_lives, int reset_ball_x, int reset_ball_y) {
 	if(m_origin->m_row <= 0) {
 		vy = 1;
 	} else if(m_origin->m_row >= ROW - 1) {
-		vy = -1;
+		paddle_lives--;
+		m_origin->m_row = reset_ball_y;
+		m_origin->m_col = reset_ball_x;
 	}
 	if(m_origin->m_col <= 0) {
 		vx = 1;
