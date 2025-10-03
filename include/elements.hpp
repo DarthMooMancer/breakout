@@ -32,6 +32,7 @@ struct Point {
 
 struct Ball {
 	Ball(int default_vx, int default_vy) : vx(default_vx), vy(default_vy) {};
+	~Ball();
 	Point* m_origin;
 	int vx;
 	int vy;

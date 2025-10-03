@@ -104,6 +104,11 @@ void Paddle::check_collision(Ball &ball) {
 	}
 }
 
+Ball::~Ball() {
+	delete m_origin;
+	m_origin = nullptr;
+}
+
 void Ball::change_velocity(char d) {
 	if(d == 'x') {
 		if(vx == -1) vx = 1;
