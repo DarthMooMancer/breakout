@@ -1,20 +1,20 @@
 #include <thread>
 #include <iostream>
+#include <engine.hpp>
 #include "globals.hpp"
-#include "input.hpp"
-#include "window.hpp"
-#include "elements.hpp"
+#include <input.hpp>
+#include <window.hpp>
 
 int main() {
-	int buffer_size = 50, block_buffer_size = 15;
+	const int buffer_size = 50, block_buffer_size = 15;
 	bool running = true;
-	Point* buffer[50] = {};
+	vec2* buffer[buffer_size] = {};
 	Input input;
 	Window window;
 
-	Paddle paddle = create_new_paddle(buffer, 1, 3, ROW - 2, '-');
 	Ball ball = create_new_ball(buffer, 0, 1, -1, (ROW - 5), (COL / 2), '*' );
-	Block** block_buffer = create_block_buffer(4, '3', 3, 5, 3);
+	Paddle paddle = create_new_paddle(buffer, 1, 3, ROW - 2, '-');
+	Block** block_buffer = create_block_buffer('3', 3, 5, 3);
 	rasterize_buffer(buffer, block_buffer, 4);
 
 	std::thread input_thread([&] { input.get_input(running, paddle.m_direction); } );

@@ -1,25 +1,25 @@
-#include "elements.hpp"
+#include <engine.hpp>
 #include "globals.hpp"
 
-Paddle create_new_paddle(Point** buffer, int starting_array_index, int size, int row, char symbol) {
+Paddle create_new_paddle(vec2** buffer, int starting_array_index, int size, int row, char symbol) {
 	Paddle paddle { size };
-	paddle.m_nodes = new Point*[size];
+	paddle.m_nodes = new vec2*[size];
 	for(int i = 0; i < size; i++) {
-		paddle.m_nodes[i] = new Point { row, ((COL / 2) - (size / 2)) + i, symbol };
+		paddle.m_nodes[i] = new vec2 { row, ((COL / 2) - (size / 2)) + i, symbol };
 		buffer[i + starting_array_index] = paddle.m_nodes[i];
 	}
 
 	return paddle;
 }
 
-Ball create_new_ball(Point** buffer, int buffer_index, int default_vx, int default_vy, int row, int col, char symbol) {
+Ball create_new_ball(vec2** buffer, int buffer_index, int default_vx, int default_vy, int row, int col, char symbol) {
 	Ball ball { default_vx, default_vy };
-	ball.m_origin = new Point { row, col, symbol };
+	ball.m_origin = new vec2 { row, col, symbol };
 	buffer[buffer_index] = ball.m_origin;
 	return ball;
 }
 
-Block** create_block_buffer(int starting_array_index, int starting_symbol, int rows, int cols, int length) {
+Block** create_block_buffer(int starting_symbol, int rows, int cols, int length) {
 	Block** block_buffer = new Block*[rows * cols];
 	int row, int_symbol, col;
 	char char_symbol;
@@ -51,7 +51,7 @@ void cleanup(Block** block_buffer, int block_buffer_size) {
 	delete[] block_buffer;
 }
 
-void rasterize_buffer(Point** buffer, Block** block_buffer, int offset) {
+void rasterize_buffer(vec2** buffer, Block** block_buffer, int offset) {
 	for(int block_index = 0; block_index < 15; block_index++) {
 		if(block_buffer[block_index] == nullptr) continue;
 		for(int node_index = 0; node_index < block_buffer[block_index]->_size; node_index++) {
@@ -61,13 +61,13 @@ void rasterize_buffer(Point** buffer, Block** block_buffer, int offset) {
 	}
 }
 
-void trim_block_buffer_on_collision(Point** buffer, int buffer_size, Block** block_buffer, int &block_buffer_size, Ball &ball) {
+void trim_block_buffer_on_collision(vec2** buffer, const int buffer_size, Block** block_buffer, const int block_buffer_size, Ball &ball) {
 	for(int i = 0; i < block_buffer_size; i++) {
 		if(block_buffer[i] == nullptr) continue;
 		if(block_buffer[i]->check_collision(ball)) {
 			ball.change_velocity('y');
 			for(int a = 0; a < block_buffer[i]->_size; a++) {
-				Point* doomed = block_buffer[i]->m_nodes[a];
+				vec2* doomed = block_buffer[i]->m_nodes[a];
 				for(int j = 0; j < buffer_size; j++) {
 					if(buffer[j] == doomed) {
 						buffer[j] = nullptr;
@@ -91,17 +91,17 @@ Paddle::~Paddle() {
 	}
 }
 
-void Paddle::determine_new_position(Point* (*board)[COL]) {
-	if(m_direction == LEFT && m_nodes[0]->m_col - 1 >= 0) {
-		m_nodes[0]->m_col--;
+void Paddle::determine_new_position(vec2* (*board)[COL]) {
+	if(m_direction == LEFT && m_nodes[0]->x - 1 >= 0) {
+		m_nodes[0]->x--;
 		for(int i = 1; i < _size; i++) {
-			m_nodes[i]->m_col = m_nodes[0]->m_col + i;
+			m_nodes[i]->x = m_nodes[0]->x + i;
 		}
 	}
-	else if(m_direction == RIGHT && m_nodes[_size - 1]->m_col + 1 < ROW) {
-		m_nodes[_size - 1]->m_col++;
+	else if(m_direction == RIGHT && m_nodes[_size - 1]->x + 1 < ROW) {
+		m_nodes[_size - 1]->x++;
 		for(int i = 1; i < _size; i++) {
-			m_nodes[_size - (i + 1)]->m_col = m_nodes[_size - 1]->m_col - i;
+			m_nodes[_size - (i + 1)]->x = m_nodes[_size - 1]->x - i;
 		}
 	}
 	m_direction = NONE;
@@ -109,8 +109,8 @@ void Paddle::determine_new_position(Point* (*board)[COL]) {
 
 void Paddle::check_collision(Ball &ball) {
 	for(int i = 0; i < _size; i++) {
-		if(ball.m_origin->m_row != m_nodes[i]->m_row) continue;
-		if(ball.m_origin->m_col != m_nodes[i]->m_col) continue;
+		if(ball.m_origin->y != m_nodes[i]->y) continue;
+		if(ball.m_origin->x != m_nodes[i]->x) continue;
 		ball.change_velocity('y');
 	}
 }
@@ -131,21 +131,21 @@ void Ball::change_velocity(char d) {
 }
 
 void Ball::determine_new_position(int &paddle_lives, int reset_ball_x, int reset_ball_y) {
-	if(m_origin->m_row <= 0) {
+	if(m_origin->y <= 0) {
 		vy = 1;
-	} else if(m_origin->m_row >= ROW - 1) {
+	} else if(m_origin->y >= ROW - 1) {
 		paddle_lives--;
-		m_origin->m_row = reset_ball_y;
-		m_origin->m_col = reset_ball_x;
+		m_origin->y = reset_ball_y;
+		m_origin->x = reset_ball_x;
 	}
-	if(m_origin->m_col <= 0) {
+	if(m_origin->x <= 0) {
 		vx = 1;
-	} else if(m_origin->m_col >= COL - 1) {
+	} else if(m_origin->x >= COL - 1) {
 		vx = -1;
 	}
 
-	m_origin->m_col += vx;
-	m_origin->m_row += vy;
+	m_origin->x += vx;
+	m_origin->y += vy;
 }
 
 Block::~Block() {
@@ -161,16 +161,16 @@ Block::~Block() {
 
 Block::Block(int size, int row, int col, char symbol) {
 	_size = size;
-	m_nodes = new Point*[size];
+	m_nodes = new vec2*[size];
 	for(int i = 0; i < size; i++) {
-		m_nodes[i] = new Point { row, col + i, symbol };
+		m_nodes[i] = new vec2 { row, col + i, symbol };
 	}
 }
 
 bool Block::check_collision(Ball &ball) {
 	for(int i = 0; i < _size; i++) {
-		if(m_nodes[i]->m_col != ball.m_origin->m_col) continue;
-		if(m_nodes[i]->m_row != ball.m_origin->m_row) continue;
+		if(m_nodes[i]->x != ball.m_origin->x) continue;
+		if(m_nodes[i]->y != ball.m_origin->y) continue;
 		return true;
 	}
 	return false;

@@ -9,7 +9,7 @@ set(SOURCES
 	src/main.cpp
 	src/input.cpp
 	src/window.cpp
-	src/elements.cpp
+	src/engine.cpp
 )
 
 add_executable(breakout ${SOURCES})
